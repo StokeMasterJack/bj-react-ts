@@ -1,1 +1,0 @@
-declare module 'jsxstyle/Row'
