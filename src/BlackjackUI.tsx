@@ -1,9 +1,12 @@
 import React from "react";
 import {CSSProperties, useState} from "react";
+import {useCallback} from "react";
 import {Game, Hand, Card} from "blackjack";
 
 type Action = "d" | "h" | "s";
 type OnAction = (action: Action) => void;
+
+const map = new Map<OnAction, OnAction>();
 
 const ButtonsVu = React.memo(({isActive, onAction}: { isActive: boolean, onAction: OnAction }) => {
 
@@ -15,6 +18,9 @@ const ButtonsVu = React.memo(({isActive, onAction}: { isActive: boolean, onActio
     const styleButton: CSSProperties = {
         marginRight: ".5rem"
     };
+
+    map.set(onAction, onAction);
+    console.log("map.size: ", map.size);
 
     return <div>
         <button name='d' style={styleButton} onClick={onClick} disabled={isActive}>Deal</button>
@@ -95,13 +101,39 @@ const updateGame = (g: Game, action: Action): Game => {
     }
 };
 
+class Foo extends React.Component<any, { x: number, y: number }> {
+
+
+    constructor(props: Readonly<any>) {
+        super(props);
+        this.state = {
+            x: 10,
+            y: 10
+        };
+    }
+
+    onClick = (e: any) => {
+        this.setState({x: 3});
+    };
+
+    render() {
+        return <div>
+            <span onClick={this.onClick}>{this.state.x}</span>
+            <span>{this.state.y}</span>
+        </div>;
+    }
+
+}
+
 export const Blackjack = () => {
+
     const [g, setG] = useState(Game.mk({shuffle: true}));
 
-    const onAction: OnAction = (action: Action) => {
-        const g2 = updateGame(g, action);
-        setG(g2);
-    };
+    const onAction: OnAction = useCallback((action: Action) => {
+        const updater = (prevState: Game) => updateGame(prevState, action);
+        setG(updater);
+    }, [setG]);
+
 
     return <BlackjackVu g={g} onAction={onAction}/>;
 };
