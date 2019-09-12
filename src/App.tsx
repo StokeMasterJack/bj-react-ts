@@ -1,19 +1,15 @@
 import React from "react";
-// import {useState} from "react";
 import {Blackjack} from "BlackjackUI";
 import {RefsDemo} from "RefsDemo";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
+import {Job} from "Job";
 
-type TabKey = "/" | "/bj" | "/refs";
+type TabKey = "/" | "/bj" | "/refs" | "/job";
 
 const App = ({path}: { path: string }) => {
 
-    console.log("path: ", path);
-
     const tab = path as TabKey;
-
-    console.log("tab: ", tab);
 
     const setTab = (tab: TabKey) => {
         window.history.pushState(null, "", tab);
@@ -28,6 +24,8 @@ const App = ({path}: { path: string }) => {
                 return <Blackjack/>;
             case "/refs":
                 return <RefsDemo/>;
+            case "/job":
+                return <Job id={360123}/>;
         }
     };
 
@@ -47,6 +45,7 @@ const TabBar = ({tab, setTab}: { tab: TabKey, setTab: any }) => {
         <Tab value={"/"} label="Home"/>
         <Tab value={"/bj"} label="Blackjack"/>
         <Tab value={"/refs"} label="Refs"/>
+        <Tab value={"/job"} label="Job"/>
     </Tabs>;
 };
 

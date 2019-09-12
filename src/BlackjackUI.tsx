@@ -1,6 +1,6 @@
 import React from "react";
-import {CSSProperties, useState} from "react";
-import {useCallback} from "react";
+import {CSSProperties} from "react";
+import {useReducer} from "react";
 import {Game, Hand, Card} from "blackjack";
 
 type Action = "d" | "h" | "s";
@@ -75,7 +75,7 @@ const HandVu = React.memo(({h}: { h: Hand }) => {
 
 const BlackjackVu = React.memo(({g, onAction}: { g: Game, onAction: OnAction }) => {
     return <div>
-        <h1 style={{color: "indianred"}}>Black Jack</h1>
+        <h1 style={{color: "indianred"}}>Black Jack - Reducer</h1>
         <div style={{marginBottom: "1rem", fontWeight: "bold", fontSize: 20, color: "rebeccapurple"}}>{g.msg}</div>
         <div style={{display: "flex", marginBottom: ".5rem"}}>
             <HandVu h={g.ph}/>
@@ -101,41 +101,20 @@ const updateGame = (g: Game, action: Action): Game => {
     }
 };
 
-class Foo extends React.Component<any, { x: number, y: number }> {
-
-
-    constructor(props: Readonly<any>) {
-        super(props);
-        this.state = {
-            x: 10,
-            y: 10
-        };
-    }
-
-    onClick = (e: any) => {
-        this.setState({x: 3});
-    };
-
-    render() {
-        return <div>
-            <span onClick={this.onClick}>{this.state.x}</span>
-            <span>{this.state.y}</span>
-        </div>;
-    }
-
-}
-
 export const Blackjack = () => {
 
-    const [g, setG] = useState(Game.mk({shuffle: true}));
+    const [g, dispatch] = useReducer(updateGame, Game.mk({shuffle: true}));
 
-    const onAction: OnAction = useCallback((action: Action) => {
+    /*
+     pre-reducer technique:
+     const [g, setG] = useState(Game.mk({shuffle: true}));
+     const dispatch: OnAction = useCallback((action: Action) => {
         const updater = (prevState: Game) => updateGame(prevState, action);
         setG(updater);
     }, [setG]);
+    */
 
-
-    return <BlackjackVu g={g} onAction={onAction}/>;
+    return <BlackjackVu g={g} onAction={dispatch}/>;
 };
 
 
