@@ -259,6 +259,9 @@ export class Game {
 
 }
 
+// export type BjAction = 'd' | 'h' | 's';
+export type OnBjAction = (action: BjAction) => void;
+
 export type BjAction = {
     type: "deal" | "hit" | "stay"
 }

@@ -1,14 +1,29 @@
-import React from "react";
-import ReactDOM from "react-dom";
-import App from "./App";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import {User} from './user';
+import {UserContext} from './common';
+
+
+const user: User = {
+    id: 33,
+    firstName: 'Dave',
+    lastName: 'Ford'
+};
 
 const renderToDom = (location: Location) => {
     const pathname = location.pathname;
-    ReactDOM.render(<App path={pathname}/>, document.getElementById("root"));
+    const ui = (
+        <UserContext.Provider value={user}>
+            <App path={pathname}/>
+        </UserContext.Provider>
+    );
+
+    ReactDOM.render(ui, document.getElementById('root'));
 };
 
 renderToDom(window.location);
 
-window.addEventListener("popstate", () => {
+window.addEventListener('popstate', () => {
     renderToDom(window.location);
 });
